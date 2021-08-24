@@ -2,16 +2,18 @@
 
 from guizero import App, PushButton, info, Window, Text
 from functools import partial
-# from gpiozero import LED
-import sys
 from rpiToArduino import rpi2Arduino
-import threading
+import sys
 import concurrent.futures
 
-# led = LED(21)
 jobs = ["Cleaning", "Drying"]
-CLEANING = 1
-DRYING = 2
+CLEANING = 0
+DRYING = 1
+WIN_WIDTH=500
+WIN_HEIGHT=380
+TEXT_SIZE = 30
+RED = "red"
+
 
 def exitApplication():
     if app.yesno("Quit...", "Do you want to quit?"):
@@ -19,57 +21,47 @@ def exitApplication():
         sys.exit()
 
 def beginProgram(jobType):
-    # led.toogle()
-    # if led.is_lit:
-    #     ledButton.text = "Drying started"
-    print("job: ", jobType)
-    # else:
-    #     ledButton.text = "Start Drying"
-    # app.info("Info", jobs[jobType-1] + " process started!!!")
-    # text.value = jobs[jobType-1] + " process started!!!"
-    # t = threading.Thread(target=displayMsg, args=(jobType,))
-    # t.start()
-    """
-
-    t = threading.Thread(target=comms.communications, args=(jobType,))
-    t.start()
-    # t.join()
-    # window.hide()
-    app.info("Info", jobs[jobType-1] + " process finished!!!")
-
-    # if comms.communications(jobType):
-    #     app.info("Info", jobs[jobType-1] + " process finished!!!")
-    """
+    displayMsg(jobType)
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        future = executor.submit(comms.communications, jobType)
+        future = executor.submit(comms.communications, jobType+1)
         return_value = future.result()
         print(return_value)
         if return_value:
-            # window.hide()
-            app.info("Info", jobs[jobType-1] + " process finished!!!")
-            pass
+            window.hide()
+            app.info("Info", jobs[jobType] + " process finished!!!")
+
 
 def displayMsg(jobType):
-    text.value = jobs[jobType-1] + " process started!!!"
+    global window
+    window = Window(app, title = "Process", height=WIN_HEIGHT, width=WIN_WIDTH)
+    
+    text = Text(window, text=jobs[jobType] + " process started!!!\n\nPlease wait...", align="left", width="fill")
+    text.text_size = TEXT_SIZE
+    
+    screen_width = app.tk.winfo_screenwidth()
+    screen_height = app.tk.winfo_screenheight()
+    x = (screen_width/2) - (WIN_WIDTH/2)
+    y = (screen_height/2) - (WIN_HEIGHT/2)
+    window.tk.geometry('%dx%d+%d+%d' % (WIN_WIDTH, WIN_HEIGHT, x, y))
+    
     window.show()
-
-
-if __name__ == '__main__':
+    window.update()
+   
+   
+if __name__ == '__main__':    
     app = App("Gui", height=480, width=800)
-    window = Window(app, title = "", height=240, width=400)
-    text = Text(window, text="hi", align="left", width="fill")
-    window.hide()
+    app.tk.attributes("-fullscreen", True)
 
     comms = rpi2Arduino()
 
     cleaningButton = PushButton(app, partial(beginProgram, CLEANING), text="Start Cleaning", align="top", width=15, height=2)
-    cleaningButton.text_size = 30
+    cleaningButton.text_size = TEXT_SIZE
 
     dryingButton = PushButton(app, partial(beginProgram, DRYING), text="Start Drying", width=15, height=2)
-    dryingButton.text_size = 30
+    dryingButton.text_size = TEXT_SIZE
 
     exitButton = PushButton(app, exitApplication, text="Exit", align="bottom", width=15, height=2)
-    exitButton.text_size = 30
-    exitButton.text_color = "red"
+    exitButton.text_size = TEXT_SIZE
+    exitButton.text_color = RED
 
     app.display()
