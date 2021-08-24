@@ -19,7 +19,7 @@ def clean(currentSys):
     if (currentSys == "Windows"):
         command = "rmdir /S /Q src\\rpi\__pycache__ env"
     else:
-        command = "rm -rf src/rpi/__pycache__ env"
+        command = "rm -rf src/rpi/__pycache__"
 
 
 if ( __name__ == "__main__"):

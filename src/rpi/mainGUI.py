@@ -70,5 +70,6 @@ if __name__ == '__main__':
 
     exitButton = PushButton(app, exitApplication, text="Exit", align="bottom", width=15, height=2)
     exitButton.text_size = 30
+    exitButton.text_color = "red"
 
     app.display()
