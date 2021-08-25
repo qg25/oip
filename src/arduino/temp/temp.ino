@@ -1,6 +1,7 @@
 #include <dht11.h>
 dht11 DHT;
 #define DHT11_PIN 4
+bool JobDone = true;
 
 void setup(){
   Serial.begin(9600);
@@ -33,7 +34,7 @@ void loop(){
       case 2:
         Serial.println("do 2");
         delay(1000);
-        Serial.println("done");
+        Serial.println(JobDone, BIN);
         break;
 
       default:
@@ -70,8 +71,8 @@ bool readHumidity(int *count){
   *count += 1;
   delay(2000);
   if (*count == 3) {
-    Serial.println("done");
-    return true;
+    Serial.println(JobDone, BIN);
+    return JobDone;
   }
-  return false;
+  return !JobDone;
 }

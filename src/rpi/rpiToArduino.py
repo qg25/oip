@@ -7,6 +7,7 @@ WASHING = 1
 DRYING = 2
 isWet = True
 isDirty = True
+JobDone = True
 
 
 class rpi2Arduino:
@@ -35,7 +36,8 @@ class rpi2Arduino:
                 print('\nreceive')
                 self.line = self.ser.readline().decode('utf-8').rstrip()
                 # print(line != "done")
-                if self.line == "done":
+                print(self.line)
+                if bool(self.line) == JobDone:
                     self.line = ""
                     break
                 print(self.line)
