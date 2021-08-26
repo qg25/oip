@@ -1,4 +1,4 @@
-# OIP - Oversea Immersion Project
+# OIP - Oversea Immersion Project 2021
 
 * Steps
     1. Enter "make" to setup enviroment and install necessary packages
