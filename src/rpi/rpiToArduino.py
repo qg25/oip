@@ -7,7 +7,7 @@ WASHING = 1
 DRYING = 2
 isWet = True
 isDirty = True
-JobDone = True
+JobDone = '1'
 
 
 class rpi2Arduino:
@@ -16,10 +16,10 @@ class rpi2Arduino:
         if (currentSys == "Windows"):
             self.ser = serial.Serial(port='COM4', baudrate=9600, timeout=1)
         else:
-            self.ser = serial.Serial(port='/dev/ttyACM0', baudrate=9600, timeout=1)
+            self.ser = serial.Serial(port='/dev/ttyACM1', baudrate=9600, timeout=1)
         self.ser.flush()
 
-        print('Start')
+        print('Program Start')
         self.line = ""
 
         self.ser.setDTR(False)
@@ -35,15 +35,11 @@ class rpi2Arduino:
             if self.ser.in_waiting > 0:
                 print('\nreceive')
                 self.line = self.ser.readline().decode('utf-8').rstrip()
-                # print(line != "done")
                 print(self.line)
-                if bool(self.line) == JobDone:
+                if self.line == JobDone:
                     self.line = ""
                     break
                 print(self.line)
-
-        print("\nended")
-        time.sleep(1)
         return True
 
 
