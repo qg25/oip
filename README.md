@@ -1,4 +1,4 @@
-# OIP
+# OIP - Oversea Immersion Project
 
 * Steps
     1. Enter "make" to setup enviroment and install necessary packages
