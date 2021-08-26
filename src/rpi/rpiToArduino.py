@@ -22,18 +22,18 @@ class rpi2Arduino:
         print('Program Start')
         self.line = ""
 
-        self.ser.setDTR(False)
-        time.sleep(1)
-        self.ser.flushInput()
-        self.ser.setDTR(True)
-        time.sleep(2)
+        #self.ser.setDTR(False)
+        #time.sleep(1)
+        #self.ser.flushInput()
+        #self.ser.setDTR(True)
+        #time.sleep(2)
         
 
     def communications(self, jobType):
         self.ser.write(str(jobType).encode('utf-8'))
         while (True):
             if self.ser.in_waiting > 0:
-                print('\nreceive')
+                #print('\nreceive')
                 self.line = self.ser.readline().decode('utf-8').rstrip()
                 print(self.line)
                 if self.line == JobDone:
