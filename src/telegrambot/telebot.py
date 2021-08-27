@@ -3,6 +3,7 @@ import sys
 import telepot
 from dotenv import load_dotenv
 
+
 fname = "users.txt"
 dirPath = os.path.dirname(os.path.realpath(__file__))
 filePath = os.path.join(dirPath, fname)
@@ -12,6 +13,7 @@ welcome_msg = "Hi %s, Welcome to Resyringe!!!"
 joined_msg = "Hi %s, you have already subscribed to Resyringe"
 goodbye_msg = "Goodbye %s, it is sad to see you leave :("
 not_join_msg = "Hi %s, you have not subscribe to Resyringe"
+
 
 class telebot:
     def __init__(self):
@@ -87,12 +89,12 @@ class telebot:
         return goodbye_msg if isExist else not_join_msg
                 
 
-    def sendNotification(self):
+    def sendNotification(self, notification="Good day!!!"):
         if os.path.exists(filePath):
             with open(filePath, "r") as f:
                 lines = f.readlines()
                 for line in lines:
-                    bot.sendMessage(line.strip("\n"), "notification")
+                    bot.sendMessage(line.strip("\n"), notification)
 
 
 if __name__ == "__main__":
