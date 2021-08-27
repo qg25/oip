@@ -1,4 +1,4 @@
-import detect2
+import detect
 
-count = detect2.main()
+count = detect.main()
 print("testing count: ", count)

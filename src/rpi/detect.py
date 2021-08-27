@@ -59,7 +59,7 @@ def run(weights='yolov5s.pt',  # model.pt path(s)
         ('rtsp://', 'rtmp://', 'http://', 'https://'))
 
     # Directories
-    # save_dir = increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
+    save_dir = increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
     # (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
 
     # Initialize
@@ -82,11 +82,11 @@ def run(weights='yolov5s.pt',  # model.pt path(s)
             modelc = load_classifier(name='resnet50', n=2)  # initialize
             modelc.load_state_dict(torch.load('resnet50.pt', map_location=device)['model']).to(device).eval()
     elif onnx:
-        check_requirements(('onnx', 'onnxruntime'))
+        # check_requirements(('onnx', 'onnxruntime'))
         import onnxruntime
         session = onnxruntime.InferenceSession(w, None)
     else:  # TensorFlow models
-        check_requirements(('tensorflow>=2.4.1',))
+        # check_requirements(('tensorflow>=2.4.1',))
         import tensorflow as tf
         if pb:  # https://www.tensorflow.org/guide/migrate#a_graphpb_or_graphpbtxt
             def wrap_frozen_graph(gd, inputs, outputs):
@@ -193,7 +193,6 @@ def run(weights='yolov5s.pt',  # model.pt path(s)
                     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
                     if names[int(c)] == "dirty":
                         counter = int(f'{n}')
-                        return counter
 
                 # Write results
                 # for *xyxy, conf, cls in reversed(det):
@@ -213,6 +212,7 @@ def run(weights='yolov5s.pt',  # model.pt path(s)
             # Print time (inference + NMS)
             print(f'{s}Done. ({t2 - t1:.3f}s)')
             print("Dirty count: ", counter)
+            return counter
             
 
             # Stream results
@@ -281,12 +281,11 @@ def parse_opt():
     return opt
 
 
-def main(opt):
+def main(opt= parse_opt()):
     print(colorstr('detect: ') + ', '.join(f'{k}={v}' for k, v in vars(opt).items()))
-    check_requirements(exclude=('tensorboard', 'thop'))
-    run(**vars(opt))
+    # check_requirements(exclude=('tensorboard', 'thop'))
+    return run(**vars(opt))
 
 
 if __name__ == "__main__":
-    opt = parse_opt()
-    main(opt)
+    main()
