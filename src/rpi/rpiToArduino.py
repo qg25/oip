@@ -7,7 +7,7 @@ WASHING = 1
 DRYING = 2
 isWet = True
 isDirty = True
-JobDone = True
+JobDone = '1'
 
 
 class rpi2Arduino:
@@ -19,31 +19,29 @@ class rpi2Arduino:
             self.ser = serial.Serial(port='/dev/ttyACM0', baudrate=9600, timeout=1)
         self.ser.flush()
 
-        print('Start')
+        print('Program Start')
         self.line = ""
 
-        self.ser.setDTR(False)
-        time.sleep(1)
-        self.ser.flushInput()
-        self.ser.setDTR(True)
-        time.sleep(2)
+        #self.ser.setDTR(False)
+        #time.sleep(1)
+        #self.ser.flushInput()
+        #self.ser.setDTR(True)
+        #time.sleep(2)
+    def exitProgram(self, exiting):
+        self.ser.write(str(exiting).encode('utf-8'))
         
 
     def communications(self, jobType):
         self.ser.write(str(jobType).encode('utf-8'))
         while (True):
             if self.ser.in_waiting > 0:
-                print('\nreceive')
+                #print('\nreceive')
                 self.line = self.ser.readline().decode('utf-8').rstrip()
-                # print(line != "done")
                 print(self.line)
-                if bool(self.line) == JobDone:
+                if self.line == JobDone:
                     self.line = ""
                     break
                 print(self.line)
-
-        print("\nended")
-        time.sleep(1)
         return True
 
 

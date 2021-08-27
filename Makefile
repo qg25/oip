@@ -3,12 +3,16 @@ PYTHON=${VENV_NAME}/bin/python
 WINS_PYTHON=${VENV_NAME}/Scripts/python
 PIP=${VENV_NAME}/Scripts/pip
 
-.PHONY: create install run clean
+.PHONY: create install run clean rpi-create rpi-install rpi-run rpi-clean
 .DEFAULT: create
+
 
 create: setup.py
 ifdef OS
 	python setup.py create
+else
+	python3 setup.py create
+	sudo apt-get install libopenblas-dev -y
 endif
 	make install
 	
@@ -18,9 +22,8 @@ ifdef OS
 	${WINS_PYTHON} -m pip install --upgrade pip
 	${WINS_PYTHON} -m pip install -r requirements.txt
 else
-	python3 -m pip install --upgrade pip
-	sudo python3 -m pip install -r requirements.txt
-	chmod +x src/rpi/mainGUI.py
+	${PYTHON} -m pip install --upgrade pip
+	${PYTHON} -m pip install -r rpi-requirements.txt
 endif
 
 
@@ -28,7 +31,7 @@ run:
 ifdef OS
 	${WINS_PYTHON} src\rpi\mainGUI.py
 else
-	python3 src/rpi/mainGUI.py
+	${PYTHON} src/rpi/mainGUI.py
 endif
 
 
@@ -36,6 +39,46 @@ clean:
 ifdef OS
 	python setup.py clean
 else
+	rm -rf src/rpi/__pycache__ env =0.8.1 =1.7.0
+	sudo apt-get remove --auto-remove libopenblas-dev -y
+endif
+
+
+
+
+rpi-create:
+ifdef OS
+	make create
+else
+	python3 -m pip install --upgrade pip
+	sudo apt-get install libopenblas-dev -y
+	make rpi-install
+endif
+
+
+rpi-install:
+ifdef OS
+	make install
+else
+	sudo python3 -m pip install -r rpi-requirements.txt
+	chmod +x src/rpi/mainGUI.py
+endif
+
+
+rpi-run:
+ifdef OS
+	make run
+else
+	python3 src/rpi/mainGUI.py
+endif
+
+
+rpi-clean:
+ifdef OS
+	make clean
+else
 	python3 setup.py clean
 	sudo python3 -m pip uninstall -r requirements.txt -y
+	sudo apt-get remove --auto-remove libopenblas-dev -y
 endif
+
