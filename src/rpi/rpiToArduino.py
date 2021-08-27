@@ -16,7 +16,7 @@ class rpi2Arduino:
         if (currentSys == "Windows"):
             self.ser = serial.Serial(port='COM4', baudrate=9600, timeout=1)
         else:
-            self.ser = serial.Serial(port='/dev/ttyACM1', baudrate=9600, timeout=1)
+            self.ser = serial.Serial(port='/dev/ttyACM0', baudrate=9600, timeout=1)
         self.ser.flush()
 
         print('Program Start')
@@ -27,6 +27,8 @@ class rpi2Arduino:
         #self.ser.flushInput()
         #self.ser.setDTR(True)
         #time.sleep(2)
+    def exitProgram(self, exiting):
+        self.ser.write(str(exiting).encode('utf-8'))
         
 
     def communications(self, jobType):
