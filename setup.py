@@ -7,9 +7,6 @@ def create(currentSys):
 
     if (currentSys == "Windows"):
         command = "python -m venv env"
-    elif (currentSys == "Darwin"):
-        os.system("virtualenv env")
-        command = "virtualenv env --system-site-packages"
     else:
         command = "python3 -m venv env"
 
