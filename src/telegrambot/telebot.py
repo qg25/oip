@@ -1,18 +1,17 @@
 import os
 import sys
 import telepot
-from pprint import pprint
-
+from dotenv import load_dotenv
 
 fname = "users.txt"
 dirPath = os.path.dirname(os.path.realpath(__file__))
 filePath = os.path.join(dirPath, fname)
+dotenv_path = os.path.join(dirPath, ".env")
 
 welcome_msg = "Hi %s, Welcome to Resyringe!!!"
 joined_msg = "Hi %s, you have already subscribed to Resyringe"
 goodbye_msg = "Goodbye %s, it is sad to see you leave :("
 not_join_msg = "Hi %s, you have not subscribe to Resyringe"
-
 
 class telebot:
     def __init__(self):
@@ -37,10 +36,10 @@ class telebot:
                 bot.sendMessage(chat_id, 'Invalid command.')
                 self.sendNotification()
 
-        print ("path: ", dirPath)
+        load_dotenv(dotenv_path=dotenv_path)
         try:
             global bot
-            bot = telepot.Bot('1962170802:AAGdGqr-jMhRMQ4POW43BqfCLytXJIGC5XE')
+            bot = telepot.Bot(os.getenv('ACCESS_TOKEN'))
             bot.message_loop(handle)
             while True:
                 pass
@@ -50,7 +49,7 @@ class telebot:
     
     def addUser(self, chatID):
         isExist = False
-        lines = 0
+        lines = []
         
         if os.path.exists(filePath):
             with open(filePath, "r") as f:
@@ -70,7 +69,7 @@ class telebot:
 
     def removeUser(self, chatID):
         isExist = False
-        lines = 0
+        lines = []
 
         if os.path.exists(filePath):
             with open(filePath, "r") as f:
