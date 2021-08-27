@@ -9,6 +9,7 @@ import concurrent.futures
 jobs = ["Cleaning", "Drying"]
 CLEANING = 0
 DRYING = 1
+EXIT = 4
 WIN_WIDTH=500
 WIN_HEIGHT=380
 TEXT_SIZE = 30
@@ -17,6 +18,7 @@ RED = "red"
 
 def exitApplication():
     if app.yesno("Quit...", "Do you want to quit?"):
+        comms.exitProgram(EXIT)
         app.destroy()
         sys.exit()
 
