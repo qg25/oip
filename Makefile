@@ -3,8 +3,17 @@ PYTHON=${VENV_NAME}/bin/python
 WINS_PYTHON=${VENV_NAME}/Scripts/python
 PIP=${VENV_NAME}/Scripts/pip
 
-.PHONY: create install run clean
+.PHONY: create install run clean env runenv
 .DEFAULT: create
+
+
+env:
+ifdef OS
+	python setup.py create
+else
+	python3 setup.py create
+endif
+
 
 create: setup.py
 ifdef OS
@@ -28,8 +37,12 @@ run:
 ifdef OS
 	${WINS_PYTHON} src\rpi\mainGUI.py
 else
-	python3 src/rpi/mainGUI.py
+	python3 src/rpi/mainGUI.py	
 endif
+
+
+runenv:
+	${PYTHON} src\rpi\mainGUI.py
 
 
 clean:
