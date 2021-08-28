@@ -1,6 +1,11 @@
 from picamera import PiCamera
-import time
+import os
 
+fname = "image1.jpg"
+dirName = "images"
+filePath = os.path.dirname(os.path.realpath(__file__))
+dirPath = os.path.join(filePath, dirName)
+savePath = os.path.join(dirPath, fname)
 
 class rpiCam:
     def __init__(self):
@@ -9,7 +14,7 @@ class rpiCam:
         self.camera.contrast = 10
 
     def captureImage(self):
-        self.camera.capture('images/image1.jpg')
+        self.camera.capture(savePath)
 
 
 if __name__ == '__main__':
