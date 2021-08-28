@@ -1,0 +1,9 @@
+Flask
+jsonlib 
+requests
+AST
+opencv-python
+tensorflow
+os-sys
+numpy
+yolov5
