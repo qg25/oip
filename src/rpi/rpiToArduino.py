@@ -2,13 +2,14 @@ import serial
 import time
 import platform
 import sys
-import checkCondition
+from checkConditions import checkCondition
 
 FULL_CYCLE = 0
 HALF_CYCLE = 1
 WASHING = 1
 DRYING = 2
 STERILIZING = 3
+EXIT = 4
 JobDone = '1'
 
 
@@ -42,12 +43,16 @@ class rpi2Arduino:
         isDirty = True
 
         while True:
-            if JobDone == FULL_CYCLE and isDirty:
+            if jobType == EXIT:
+                self.sendJob(EXIT)
+                break
+            
+            if jobType == FULL_CYCLE and isDirty:
                 self.sendJob(WASHING)
-                isDirty = checkCondition().checkCleanliness(self.checks)
-            elif (JobDone == FULL_CYCLE or JobDone == HALF_CYCLE) and isWet:
+                isDirty = checkCondition.checkCleanliness(self.checks)
+            elif (jobType == FULL_CYCLE or jobType == HALF_CYCLE) and isWet:
                 self.sendJob(DRYING)
-                isWet = checkCondition().checkDryness(self.checks)
+                isWet = checkCondition.checkDryness(self.checks)
             else:
                 self.sendJob(STERILIZING)
                 break
