@@ -184,7 +184,7 @@ def run(weights='yolov5s.pt',  # model.pt path(s)
             gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
             imc = im0.copy() if save_crop else im0  # for save_crop
             thelist = []
-            counter = 0
+
             if len(det):
                 # Rescale boxes from img_size to im0 size
                 det[:, :4] = scale_coords(img.shape[2:], det[:, :4], im0.shape).round()
@@ -214,13 +214,12 @@ def run(weights='yolov5s.pt',  # model.pt path(s)
             # Print time (inference + NMS)
             print(f'{s}Done. ({t2 - t1:.3f}s)')
             print("Dirty count: ", counter)
-            return counter
-            
+            break
 
             # Stream results
-            if view_img:
-                cv2.imshow(str(p), im0)
-                cv2.waitKey(1)  # 1 millisecond
+            #if view_img:
+            #    cv2.imshow(str(p), im0)
+            #    cv2.waitKey(1)  # 1 millisecond
 
             # Save results (image with detections)
             # if save_img:
@@ -249,6 +248,8 @@ def run(weights='yolov5s.pt',  # model.pt path(s)
         strip_optimizer(weights)  # update model (to fix SourceChangeWarning)
 
     print(f'Done. ({time.time() - t0:.3f}s)')
+    print ("detect counter: ",counter)
+    return counter
 
 
 def parse_opt():

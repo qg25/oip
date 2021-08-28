@@ -7,11 +7,16 @@ class checkCondition:
 
     def checkCleanliness(self):
         count = detect.main()
-        return False if count > 0 else True
+        print("check count: ", count)
+        result = True
+        if count >= 1:
+            return True
+        else:
+            return False
 
     def checkDryness(self):
         print("Drying")
-        pass
+        return False
 
 
 if __name__ == '__main__':

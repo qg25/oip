@@ -52,7 +52,7 @@ def displayMsg(jobType):
    
 if __name__ == '__main__':    
     app = App("Gui", height=480, width=800)
-    #app.tk.attributes("-fullscreen", True)
+    app.tk.attributes("-fullscreen", True)
 
     comms = rpi2Arduino()
 

@@ -48,11 +48,13 @@ class rpi2Arduino:
             if jobType == EXIT:
                 self.sendJob(EXIT)
                 break
+            print("dirty?: ", isDirty)
             
             if jobType == FULL_CYCLE and isDirty:
                 self.sendJob(WASHING)
                 rpiCamera.captureImage(self.camera)
                 isDirty = checkCondition.checkCleanliness(self.checks)
+                print("after?: ", isDirty)
             elif (jobType == FULL_CYCLE or jobType == HALF_CYCLE) and isWet:
                 self.sendJob(DRYING)
                 rpiCamera.captureImage(self.camera)
