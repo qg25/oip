@@ -11,6 +11,7 @@ import sys
 import time
 from pathlib import Path
 
+import os
 import cv2
 import numpy as np
 import torch
@@ -250,9 +251,15 @@ def run(weights='yolov5s.pt',  # model.pt path(s)
 
 
 def parse_opt():
+    fname = "image1.jpg"
+    dirName = "images"
+    filePath = os.path.dirname(os.path.realpath(__file__))
+    dirPath = os.path.join(filePath, dirName)
+    imagePath = os.path.join(dirPath, fname)
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--weights', nargs='+', type=str, default='models/yolov5s.pt', help='model.pt path(s)')
-    parser.add_argument('--source', type=str, default='images', help='file/dir/URL/glob, 0 for webcam')
+    parser.add_argument('--source', type=str, default=imagePath, help='file/dir/URL/glob, 0 for webcam')
     parser.add_argument('--imgsz', '--img', '--img-size', nargs='+', type=int, default=[640], help='inference size h,w')
     parser.add_argument('--conf-thres', type=float, default=0.25, help='confidence threshold')
     parser.add_argument('--iou-thres', type=float, default=0.45, help='NMS IoU threshold')
