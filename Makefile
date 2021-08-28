@@ -13,6 +13,8 @@ ifdef OS
 else
 	python3 setup.py create
 	sudo apt-get install libopenblas-dev -y
+	sudo apt-get install fswebcam -y
+	
 endif
 	make install
 	
@@ -22,6 +24,8 @@ ifdef OS
 	${WINS_PYTHON} -m pip install --upgrade pip
 	${WINS_PYTHON} -m pip install -r requirements.txt
 else
+	sudo rmmod uvcvideo
+	sudo modprobe uvcvideo nodrop=1 timeout=5000 quirks=0x80
 	${PYTHON} -m pip install --upgrade pip
 	${PYTHON} -m pip install -r rpi-requirements.txt
 endif
@@ -80,5 +84,6 @@ else
 	python3 setup.py clean
 	sudo python3 -m pip uninstall -r requirements.txt -y
 	sudo apt-get remove --auto-remove libopenblas-dev -y
+	sudo apt-get remove --auto-remove fswebcam -y
 endif
 
