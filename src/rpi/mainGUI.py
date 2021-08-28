@@ -6,10 +6,10 @@ from rpiToArduino import rpi2Arduino
 import sys
 import concurrent.futures
 
-jobs = ["Cleaning", "Drying"]
-CLEANING = 0
-DRYING = 1
-EXIT = 4
+jobs = ["Full-Cycle", "Half-Cycle"]
+FULL_CYCLE = 0
+HALF_CYCLE = 1
+EXIT = 3
 WIN_WIDTH=500
 WIN_HEIGHT=380
 TEXT_SIZE = 30
@@ -25,7 +25,7 @@ def exitApplication():
 def beginProgram(jobType):
     displayMsg(jobType)
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        future = executor.submit(comms.communications, jobType+1)
+        future = executor.submit(comms.communications, jobType)
         return_value = future.result()
         print(return_value)
         if return_value:
@@ -56,10 +56,10 @@ if __name__ == '__main__':
 
     comms = rpi2Arduino()
 
-    cleaningButton = PushButton(app, partial(beginProgram, CLEANING), text="Start Cleaning", align="top", width=15, height=2)
+    cleaningButton = PushButton(app, partial(beginProgram, FULL_CYCLE), text="Start Cleaning", align="top", width=15, height=2)
     cleaningButton.text_size = TEXT_SIZE
 
-    dryingButton = PushButton(app, partial(beginProgram, DRYING), text="Start Drying", width=15, height=2)
+    dryingButton = PushButton(app, partial(beginProgram, HALF_CYCLE), text="Start Drying", width=15, height=2)
     dryingButton.text_size = TEXT_SIZE
 
     exitButton = PushButton(app, exitApplication, text="Exit", align="bottom", width=15, height=2)
