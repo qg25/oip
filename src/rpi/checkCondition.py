@@ -1,12 +1,13 @@
 import sys
+import detect
 
 class checkCondition:
     def __init__(self):
         pass
 
     def checkCleanliness(self):
-        print("Cleaning")
-        pass
+        count = detect.main()
+        return False if count > 0 else True
 
     def checkDryness(self):
         print("Drying")
