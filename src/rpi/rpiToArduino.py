@@ -3,6 +3,7 @@ import time
 import platform
 import sys
 from checkConditions import checkCondition
+from rpiCam import rpiCamera
 
 FULL_CYCLE = 0
 HALF_CYCLE = 1
@@ -26,6 +27,7 @@ class rpi2Arduino:
         self.line = ""
 
         self.checks = checkCondition()
+        self.camera = rpiCamera()
 
         #self.ser.setDTR(False)
         #time.sleep(1)
@@ -49,9 +51,11 @@ class rpi2Arduino:
             
             if jobType == FULL_CYCLE and isDirty:
                 self.sendJob(WASHING)
+                rpiCamera.captureImage(self.camera)
                 isDirty = checkCondition.checkCleanliness(self.checks)
             elif (jobType == FULL_CYCLE or jobType == HALF_CYCLE) and isWet:
                 self.sendJob(DRYING)
+                rpiCamera.captureImage(self.camera)
                 isWet = checkCondition.checkDryness(self.checks)
             else:
                 self.sendJob(STERILIZING)

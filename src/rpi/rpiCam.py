@@ -7,7 +7,7 @@ filePath = os.path.dirname(os.path.realpath(__file__))
 dirPath = os.path.join(filePath, dirName)
 savePath = os.path.join(dirPath, fname)
 
-class rpiCam:
+class rpiCamera:
     def __init__(self):
         self.camera = PiCamera()
         self.camera.resolution = (1280, 720)
