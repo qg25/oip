@@ -9,7 +9,7 @@ from os import path
 # import base64
 # import yolov5
 from test import *
-from rpiToArduino import rpi2Arduino
+from time import sleep
 
 
 app = Flask(__name__)
@@ -32,6 +32,11 @@ class flaskApp:
             return render_template('drySyringe.html')
 
 
+        @app.route('/sterilise_syringes')
+        def sterilise_syringes():
+            return render_template('steriliseSyringe.html')
+
+
         @app.route('/check_stains')
         def check_stains():
             # Run model to detect for stains and return value gotStains
@@ -47,8 +52,31 @@ class flaskApp:
             isWet = testFunction2()
             return jsonify(result=isWet)
 
+
+        @app.route('/wash_syringes_process')
+        def wash_syringes_process():
+            for x in range(10):
+                print(x)
+                sleep(1)
+            return jsonify(result=True)
+
+
+        @app.route('/dry_syringes_process')
+        def dry_syringes_process():
+            for x in range(10):
+                print(x)
+                sleep(1)
+            return jsonify(result=True)
+
+
+        @app.route('/sterilise_syringes_process')
+        def sterilise_syringes_process():
+            for x in range(10):
+                print(x)
+                sleep(1)
+            return jsonify(result=True)
+
         app.run(host='0.0.0.0')
 
 if __name__ == '__main__':
     flaskApp()
-    comms = rpi2Arduino()

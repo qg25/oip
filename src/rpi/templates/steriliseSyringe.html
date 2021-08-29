@@ -44,12 +44,12 @@
 
 <body>
 
-    <!-- ======= Dry Section ======= -->
-    <section id="dry" class="services">
+    <!-- ======= Sterilise Section ======= -->
+    <section id="sterilise" class="services">
         <div class="container" data-aos="fade-up">
 
             <div class="section-title">
-                <h2>Drying Stage</h2>
+                <h2>Sterilising Stage</h2>
             </div>
 
             <div class="row">
@@ -64,16 +64,13 @@
                             </svg>
                             <i class='bx bxs-washer'></i>
                         </div>
-                        <h4><a id=dryText><b>Drying in Progress</b></a></h4>
+                        <h4><a id=steriliseText><b>Sterilising in Progress</b></a></h4>
                         <div id="myProgress">
                             <div id="myBar">10%</div>
                         </div>
                         <br><br>
                         <h2>Results</h2>
-                        <div id="checkWetMsg">
-                            Checking if the syringes are still wet..
-                        </div>
-                        <div id="resultWetMsg">
+                        <div id="resultSteriliseMsg">
                             <span id="result"></span>
                         </div>
                     </div>
@@ -126,13 +123,12 @@
     <script src="static/assets/vendor/typed.js/typed.min.js"></script>
     <script src="static/assets/vendor/waypoints/noframework.waypoints.js"></script>
 
-    
     <!-- Template Main JS File -->
     <script src="static/assets/js/main.js"></script>
     <script>
-        function callDryFunc() {
+        function callSteriliseFunc() {
             $.ajax({
-                url: '/dry_syringes_process',
+                url: '/sterilise_syringes_process',
                 dataType: 'JSON',
                 type: 'GET',
                 success: function (data) {
@@ -152,17 +148,15 @@
 
 
         function progressBar() {
-            var check = document.getElementById("checkWetMsg");
             if (i == 0) {
                 i = 1;
                 var elem = document.getElementById("myBar");
                 var id = setInterval(frame, 100);
                 function frame() {
                     if (width >= 100) {
-                        check.style.display = "block";
                         clearInterval(id);
                         i = 0;
-                        setTimeout(() => { callPyFunc(); }, 2000);
+                        setTimeout(() => { endProcess(); }, 2000);
                     } else {
                         if (width < 90)
                             width++;
@@ -174,35 +168,19 @@
         }
 
 
-        function callPyFunc() {
-            var result = document.getElementById("resultWetMsg");
-            $.ajax({
-                url: '/check_wetness',
-                dataType: 'JSON',
-                type: 'GET',
-                success: function (data) {
-                    result.style.display = "block";
-                    if (data.result == true) {
-                        document.getElementById("result").innerHTML = "Syringes are fully dried. Moving to sterilise stage..";
-                        setTimeout(() => { window.location.href = "{{ url_for('sterilise_syringes') }}"; }, 2000);
-                    } else {
-                        document.getElementById("result").innerHTML = "Syringes are still wet. Restarting drying stage..";
-                        setTimeout(() => { window.location.reload(); }, 2000);
-                    }
-                    console.log("SUCCESS");
-                },
-                error: function (data) {
-                    console.log("FAILURE");
-                }
-            });
+        function endProcess() {
+            var result = document.getElementById("resultSteriliseMsg");
+            result.style.display = "block";
+            document.getElementById("result").innerHTML = "Syringes are fully sterilised. Ending process..";
+            setTimeout(() => { window.location.href = "{{ url_for('index') }}"; }, 2000);
         }
-
+        
 
         var i = 0;
         var width = 10;
         window.onload = function start() {
             progressBar()
-            callDryFunc()
+            callSteriliseFunc()
             console.log('The Script will load now.');
         }
     </script>

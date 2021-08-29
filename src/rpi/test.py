@@ -1,9 +1,9 @@
 def testFunction1():
     # object detect
-    return 0
+    return True
 
 
 def testFunction2():
     # image classify
-    return 0
+    return True
 

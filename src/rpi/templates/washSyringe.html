@@ -38,42 +38,11 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
-
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 
 </head>
 
 <body>
-
-    <!-- ======= Mobile nav toggle button ======= -->
-    <!-- <button type="button" class="mobile-nav-toggle d-xl-none"><i class="bi bi-list mobile-nav-toggle"></i></button> -->
-    <!-- <i class="bi bi-list mobile-nav-toggle d-xl-none"></i> -->
-    <!-- ======= Header ======= -->
-    <!-- <header id="header" class="d-flex flex-column justify-content-center"> -->
-
-    <!-- <nav id="navbar" class="navbar nav-menu">
-            <ul>
-                <li><a href="#hero" class="nav-link scrollto active"><i class="bx bx-home"></i> <span>Home</span></a>
-                </li>
-                <li><a href="#wash" class="nav-link scrollto"><i class="bx bx-server"></i> <span>Wash</span></a></li>
-            </ul>
-        </nav> -->
-    <!-- .nav-menu -->
-
-    <!--</header> -->
-    <!-- End Header -->
-
-    <!-- ======= Hero Section ======= -->
-    <!-- <section id="hero" class="d-flex flex-column justify-content-center">
-        <div class="container" data-aos="zoom-in" data-aos-delay="100">
-            <h1>ReSyringe</h1>
-            <p>I can <span class="typed" data-typed-items="wash, rinse, dry"></span>your syringes</p>
-        </div> -->
-    <!-- </section> -->
-    <!-- End Hero -->
-
-    <!-- <main id="main"> -->
-
 
     <!-- ======= Wash Section ======= -->
     <section id="wash" class="services">
@@ -161,6 +130,51 @@
     <!-- Template Main JS File -->
     <script src="static/assets/js/main.js"></script>
     <script>
+        function callWashFunc() {
+            $.ajax({
+                url: '/wash_syringes_process',
+                dataType: 'JSON',
+                type: 'GET',
+                success: function (data) {
+                    console.log(data.result);
+                    if (data.result == true) {
+                        width = 100
+                        var elem = document.getElementById("myBar");
+                        elem.style.width = width + "%";
+                        elem.innerHTML = width + "%";
+                    }
+                    console.log("SUCCESS");
+                },
+                error: function (data) {
+                    console.log("FAILURE");
+                }
+            });
+        }
+
+
+        function progressBar() {
+            var check = document.getElementById("checkStainMsg");
+            if (i == 0) {
+                i = 1;
+                var elem = document.getElementById("myBar");
+                var id = setInterval(frame, 100);
+                function frame() {
+                    if (width >= 100) {
+                        check.style.display = "block";
+                        clearInterval(id);
+                        i = 0;
+                        setTimeout(() => { callPyFunc(); }, 2000);
+                    } else {
+                        if (width < 90)
+                            width++;
+                        elem.style.width = width + "%";
+                        elem.innerHTML = width + "%";
+                    }
+                }
+            }
+        }
+
+
         function callPyFunc() {
             var result = document.getElementById("resultStainMsg");
             $.ajax({
@@ -169,7 +183,7 @@
                 type: 'GET',
                 success: function (data) {
                     result.style.display = "block";
-                    if (data.result == "0") {
+                    if (data.result == true) {
                         document.getElementById("result").innerHTML = "Syringes are fully cleaned. Moving to drying stage..";
                         setTimeout(() => { window.location.href = "{{ url_for('dry_syringes') }}"; }, 2000);
                     } else {
@@ -183,27 +197,13 @@
                 }
             });
         }
+
+
         var i = 0;
+        var width = 10
         window.onload = function start() {
-            var check = document.getElementById("checkStainMsg");
-            if (i == 0) {
-                i = 1;
-                var elem = document.getElementById("myBar");
-                var width = 10;
-                var id = setInterval(frame, 100);
-                function frame() {
-                    if (width >= 100) {
-                        check.style.display = "block";
-                        clearInterval(id);
-                        i = 0;
-                        setTimeout(() => { callPyFunc(); }, 2000);
-                    } else {
-                        width++;
-                        elem.style.width = width + "%";
-                        elem.innerHTML = width + "%";
-                    }
-                }
-            }
+            progressBar()
+            callWashFunc()
             console.log('The Script will load now.');
         }
     </script>
