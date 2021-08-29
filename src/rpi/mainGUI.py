@@ -5,20 +5,22 @@ from functools import partial
 from rpiToArduino import rpi2Arduino
 import sys
 import concurrent.futures
+import threading
+from telegrambot.telebot import teleNotification
 
 jobs = ["Full-Cycle", "Half-Cycle"]
 FULL_CYCLE = 0
 HALF_CYCLE = 1
-EXIT = 4
 WIN_WIDTH=500
 WIN_HEIGHT=380
 TEXT_SIZE = 30
 RED = "red"
+threads = []
 
 
 def exitApplication():
     if app.yesno("Quit...", "Do you want to quit?"):
-        comms.exitProgram(EXIT)
+        comms.exitProgram()
         app.destroy()
         sys.exit()
 
@@ -52,18 +54,20 @@ def displayMsg(jobType):
    
 if __name__ == '__main__':    
     app = App("Gui", height=480, width=800)
-    app.tk.attributes("-fullscreen", True)
+    #app.tk.attributes("-fullscreen", True)
 
     comms = rpi2Arduino()
 
-    cleaningButton = PushButton(app, partial(beginProgram, FULL_CYCLE), text="Start Cleaning", align="top", width=15, height=2)
+    cleaningButton = PushButton(app, partial(beginProgram, FULL_CYCLE), text="Start Full-Cycle", align="top", width=15, height=2)
     cleaningButton.text_size = TEXT_SIZE
 
-    dryingButton = PushButton(app, partial(beginProgram, HALF_CYCLE), text="Start Drying", width=15, height=2)
+    dryingButton = PushButton(app, partial(beginProgram, HALF_CYCLE), text="Start Half-Cycle", width=15, height=2)
     dryingButton.text_size = TEXT_SIZE
 
     exitButton = PushButton(app, exitApplication, text="Exit", align="bottom", width=15, height=2)
     exitButton.text_size = TEXT_SIZE
     exitButton.text_color = RED
-
+    
+    print('Displaying...')
     app.display()
+    

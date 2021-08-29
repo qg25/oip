@@ -24,26 +24,9 @@ import io
 import time
 import numpy as np
 import picamera
-import os
 
 from PIL import Image
 from tflite_runtime.interpreter import Interpreter
-
-
-filePath = os.path.dirname(os.path.realpath(__file__))
-
-fname = "image1.jpg"
-dirName = "images"
-imageDirPath = os.path.join(filePath, dirName)
-imagePath = os.path.join(imageDirPath, fname)
-
-modelName = "model.tflite"
-modelDir = "models"
-modelDirPath = os.path.join(filePath, modelDir)
-modelPath = os.path.join(modelDirPath, modelName)
-
-labelName = "labels.txt"
-labelPath = os.path.join(modelDirPath, labelName)
 
 
 def load_labels(path):
@@ -73,31 +56,47 @@ def classify_image(interpreter, image, top_k=1):
   return [(i, output[i]) for i in ordered[:top_k]]
 
 
-def main(imageFile=imagePath):
-  labels = load_labels(labelPath)
+def main():
+  parser = argparse.ArgumentParser(
+      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+  parser.add_argument(
+      '--model', help='File path of .tflite file.', required=True)
+  parser.add_argument(
+      '--labels', help='File path of labels file.', required=True)
+  args = parser.parse_args()
 
-  interpreter = Interpreter(modelPath)
+  labels = load_labels(args.labels)
+
+  interpreter = Interpreter(args.model)
   interpreter.allocate_tensors()
   _, height, width, _ = interpreter.get_input_details()[0]['shape']
 
   with picamera.PiCamera(resolution=(640, 480), framerate=30) as camera:
-    #camera.start_preview()
+    camera.start_preview()
     timer = 0
     global results
     try:
-      if(not os.path.exists(imageDirPath)):
-            os.mkdir(imageDirPath)
-      camera.capture(imagePath)
-      image = Image.open(open(imageFile, 'rb')).convert('RGB').resize((width, height),
+      stream = io.BytesIO()
+      for _ in camera.capture_continuous(
+          stream, format='jpeg', use_video_port=True):
+        stream.seek(0)
+        image = Image.open(stream).convert('RGB').resize((width, height),
                                                          Image.ANTIALIAS)
-      results = classify_image(interpreter, image)
-      label_id, prob = results[0]
-      
+        start_time = time.time()
+        results = classify_image(interpreter, image)
+        elapsed_ms = (time.time() - start_time) * 1000
+        label_id, prob = results[0]
+        stream.seek(0)
+        stream.truncate()
+        timer+=1
+        if timer == 30:
+            break
+        camera.annotate_text = '%s %.2f\n%.1fms' % (labels[label_id], prob,
+                                                    elapsed_ms)
     finally:
-      #camera.stop_preview()
+      camera.stop_preview()
       print(results)
-      print(labels[results[0][0]])
+
 
 if __name__ == '__main__':
-  imgpath = "/home/pi/Downloads/github/oip/wet_dry_model/images/dry.jpg"
-  main(imgpath)
+  main()

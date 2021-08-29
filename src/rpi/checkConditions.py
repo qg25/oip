@@ -1,21 +1,26 @@
+from detectStain import stainDetection
+from detectDryness import dryDetection
 import sys
-import detect
+
+
+DRY = 'Dry'
 
 class checkCondition:
     def __init__(self):
         pass
 
-    def checkCleanliness(self):
-        count = detect.main()
+    def checkCleanliness(self, fname):
+        count = stainDetection(fname)
         print("check count: ", count)
-        result = True
         if count >= 1:
-            return True
-        else:
             return False
+        return True
 
-    def checkDryness(self):
-        print("Drying")
+    def checkDryness(self, fname):
+        result = dryDetection(fname)
+        print("results: ", result)
+        if result == DRY:
+            return True
         return False
 
 

@@ -252,8 +252,7 @@ def run(weights='yolov5s.pt',  # model.pt path(s)
     return counter
 
 
-def parse_opt():
-    fname = "image1.jpg"
+def parse_opt(fname):
     dirName = "images"
     filePath = os.path.dirname(os.path.realpath(__file__))
     dirPath = os.path.join(filePath, dirName)
@@ -290,11 +289,12 @@ def parse_opt():
     return opt
 
 
-def main(opt= parse_opt()):
+def stainDetection(fname  = "stainImg.jpg"):
+    opt = parse_opt(fname)
     print(colorstr('detect: ') + ', '.join(f'{k}={v}' for k, v in vars(opt).items()))
     # check_requirements(exclude=('tensorboard', 'thop'))
     return run(**vars(opt))
 
 
 if __name__ == "__main__":
-    main()
+    stainDetection()

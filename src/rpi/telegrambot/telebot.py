@@ -13,9 +13,12 @@ welcome_msg = "Hi %s, Welcome to Resyringe!!!"
 joined_msg = "Hi %s, you have already subscribed to Resyringe"
 goodbye_msg = "Goodbye %s, it is sad to see you leave :("
 not_join_msg = "Hi %s, you have not subscribe to Resyringe"
+notification_msg = "%s have completed"
+
+exitAPP = False
 
 
-class telebot:
+class teleNotification:
     def __init__(self):
         def handle(msg):
             global chat_id
@@ -41,10 +44,12 @@ class telebot:
         load_dotenv(dotenv_path=dotenv_path)
         try:
             global bot
+            global exitAPP
             bot = telepot.Bot(os.getenv('ACCESS_TOKEN'))
             bot.message_loop(handle)
             while True:
-                pass
+                if exitAPP:
+                    break
         except KeyboardInterrupt:
             sys.exit()
     
@@ -88,14 +93,19 @@ class telebot:
 
         return goodbye_msg if isExist else not_join_msg
                 
-
-    def sendNotification(self, notification="Good day!!!"):
+    def stopTelebot(self):
+        global exitAPP
+        exitAPP = True
+        
+    def sendNotification(self, jobType):
+        msg = notification_msg % jobType
+        
         if os.path.exists(filePath):
             with open(filePath, "r") as f:
                 lines = f.readlines()
                 for line in lines:
-                    bot.sendMessage(line.strip("\n"), notification)
+                    bot.sendMessage(line.strip("\n"), msg)
 
 
 if __name__ == "__main__":
-    teleBot = telebot()
+    teleBot = teleNotification()

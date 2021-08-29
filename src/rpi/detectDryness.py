@@ -25,6 +25,7 @@ import time
 import numpy as np
 import picamera
 import os
+import sys
 
 from PIL import Image
 from tflite_runtime.interpreter import Interpreter
@@ -32,10 +33,8 @@ from tflite_runtime.interpreter import Interpreter
 
 filePath = os.path.dirname(os.path.realpath(__file__))
 
-fname = "image1.jpg"
 dirName = "images"
 imageDirPath = os.path.join(filePath, dirName)
-imagePath = os.path.join(imageDirPath, fname)
 
 modelName = "model.tflite"
 modelDir = "models"
@@ -73,31 +72,26 @@ def classify_image(interpreter, image, top_k=1):
   return [(i, output[i]) for i in ordered[:top_k]]
 
 
-def main(imageFile=imagePath):
+def dryDetection(imageName=imgName):
+  global results
+  
   labels = load_labels(labelPath)
-
   interpreter = Interpreter(modelPath)
   interpreter.allocate_tensors()
   _, height, width, _ = interpreter.get_input_details()[0]['shape']
 
-  with picamera.PiCamera(resolution=(640, 480), framerate=30) as camera:
-    #camera.start_preview()
-    timer = 0
-    global results
-    try:
-      if(not os.path.exists(imageDirPath)):
-            os.mkdir(imageDirPath)
-      camera.capture(imagePath)
-      image = Image.open(open(imageFile, 'rb')).convert('RGB').resize((width, height),
-                                                         Image.ANTIALIAS)
-      results = classify_image(interpreter, image)
-      label_id, prob = results[0]
+  imagePath = os.path.join(imageDirPath, imageName)
+  image = Image.open(open(imagePath, 'rb')).convert('RGB').resize((width, height),
+                                                     Image.ANTIALIAS)
+  results = classify_image(interpreter, image)
+  label_id = results[0][0]
+
+  print(labels[label_id])
+  return labels[label_id]
       
-    finally:
-      #camera.stop_preview()
-      print(results)
-      print(labels[results[0][0]])
 
 if __name__ == '__main__':
-  imgpath = "/home/pi/Downloads/github/oip/wet_dry_model/images/dry.jpg"
-  main(imgpath)
+  if len(sys.argv) > 1:
+   dryDetection(sys.argv[1])
+  else:
+   dryDetection()
