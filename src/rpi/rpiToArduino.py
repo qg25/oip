@@ -6,7 +6,7 @@ import threading
 from checkConditions import checkCondition
 from telegrambot.telebot import teleNotification
 from rpiCam import rpiCamera
-fname = ["dirty.jpg", "clean.jpg"]
+
 fname2 = ["wet.jpg", "dry.jpg"]
 
 
@@ -41,6 +41,7 @@ class rpi2Arduino:
 
     def exitProgram(self):
         self.ser.write(str(EXIT).encode('utf-8'))
+        rpiCamera.closeCamera(self.camera)
         teleNotification.stopTelebot(self.t)
 
 
@@ -58,7 +59,7 @@ class rpi2Arduino:
             if jobType == FULL_CYCLE and not isClean:
                 self.sendJob(WASHING)
                 rpiCamera.captureImage(self.camera, WASHING)
-                isClean = checkCondition.checkCleanliness(self.checks, fname[counts])
+                isClean = checkCondition.checkCleanliness(self.checks)
                 counts=1
                 print("after?: ", isClean)
             elif not isDry:
@@ -71,7 +72,6 @@ class rpi2Arduino:
                 break
                 
         teleNotification.sendNotification(self.t, jobs[jobType])
-        rpiCamera.closeCamera(self.camera)
         return True
     
     

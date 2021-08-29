@@ -259,7 +259,7 @@ def parse_opt(fname):
     imagePath = os.path.join(dirPath, fname)
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--weights', nargs='+', type=str, default='models/yolov5s.pt', help='model.pt path(s)')
+    parser.add_argument('--weights', nargs='+', type=str, default='src/rpi/models/yolov5s.pt', help='model.pt path(s)')
     parser.add_argument('--source', type=str, default=imagePath, help='file/dir/URL/glob, 0 for webcam')
     parser.add_argument('--imgsz', '--img', '--img-size', nargs='+', type=int, default=[640], help='inference size h,w')
     parser.add_argument('--conf-thres', type=float, default=0.25, help='confidence threshold')
@@ -289,7 +289,7 @@ def parse_opt(fname):
     return opt
 
 
-def stainDetection(fname  = "stainImg.jpg"):
+def stainDetection(fname  = "cleanImg.jpg"):
     opt = parse_opt(fname)
     print(colorstr('detect: ') + ', '.join(f'{k}={v}' for k, v in vars(opt).items()))
     # check_requirements(exclude=('tensorboard', 'thop'))

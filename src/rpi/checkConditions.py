@@ -9,8 +9,8 @@ class checkCondition:
     def __init__(self):
         pass
 
-    def checkCleanliness(self, fname):
-        count = stainDetection(fname)
+    def checkCleanliness(self):
+        count = stainDetection()
         print("check count: ", count)
         if count >= 1:
             return False
