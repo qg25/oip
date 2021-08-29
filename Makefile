@@ -43,7 +43,7 @@ clean:
 ifdef OS
 	python setup.py clean
 else
-	rm -rf src/rpi/__pycache__ env =0.8.1 =1.7.0
+	python3 setup.py clean
 	sudo apt-get remove --auto-remove libopenblas-dev -y
 endif
 
