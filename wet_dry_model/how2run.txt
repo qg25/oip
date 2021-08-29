@@ -1,3 +1,0 @@
-python classify_picamera.py \
-  --model ~/ai/model.tflite \
-  --labels ~/ai/labels.txt

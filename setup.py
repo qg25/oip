@@ -1,5 +1,6 @@
 import os
 import sys
+import shutil
 import platform
 
 def create(currentSys):
@@ -10,13 +11,27 @@ def create(currentSys):
     else:
         command = "python3 -m venv env"
 
+
 def clean(currentSys):
     global command
 
     if (currentSys == "Windows"):
-        command = "rmdir /S /Q src\\rpi\__pycache__ env"
+        command = "rmdir /S /Q env"
+        clearCache()
     else:
-        command = "rm -rf src/rpi/__pycache__"
+        command = "rm -rf env"
+        clearCache()
+
+
+def clearCache():
+    path = os.path.dirname(os.path.realpath(__file__))
+    srcDirPath = os.path.join(path, "src")
+    cachePath = os.path.join(srcDirPath, "rpi")
+    print(cachePath)
+    for directories, subfolder, files in os.walk(cachePath):
+        if os.path.isdir(directories):
+            if directories[::-1][:11][::-1] == '__pycache__':
+                            shutil.rmtree(directories)
 
 
 if ( __name__ == "__main__"):
