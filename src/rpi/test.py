@@ -6,3 +6,4 @@ def testFunction1():
 def testFunction2():
     # image classify
     return 0
+
