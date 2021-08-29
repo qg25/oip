@@ -6,13 +6,14 @@ import threading
 from checkConditions import checkCondition
 from telegrambot.telebot import teleNotification
 from rpiCam import rpiCamera
+import webbrowser
 
 fname2 = ["wet.jpg", "dry.jpg"]
 
+STAIN_CHECK = "SC"
+DRY_CHECK = "DC"
+DRY_CHECK2 = "DC2"
 
-jobs = ["Full-Cycle", "Half-Cycle"]
-FULL_CYCLE = 0
-HALF_CYCLE = 1
 WASHING = 1
 DRYING = 2
 STERILIZING = 3
@@ -35,6 +36,9 @@ class rpi2Arduino:
         self.checks = checkCondition()
         self.camera = rpiCamera()
         
+        url = "http://localhost:5000/"
+        webbrowser.open(url)
+        
         self.t = threading.Thread(target=teleNotification)
         self.t.start()
 
@@ -45,33 +49,33 @@ class rpi2Arduino:
         teleNotification.stopTelebot(self.t)
 
 
-    def communications(self, jobType):
-        global isClean
-        global isDry
-        isClean = False
-        isDry = False
-        count = 0
-        counts = 0
-
-        while True:
-            print("clean?: ", isClean)
+    def communications(self, jobType):        
+        print("Job: ", jobType)
+        if jobType == WASHING:
+            return self.sendJob(WASHING)
             
-            if jobType == FULL_CYCLE and not isClean:
-                self.sendJob(WASHING)
-                rpiCamera.captureImage(self.camera, WASHING)
-                isClean = checkCondition.checkCleanliness(self.checks)
-                counts=1
-                print("after?: ", isClean)
-            elif not isDry:
-                self.sendJob(DRYING)
-                rpiCamera.captureImage(self.camera, DRYING)
-                isDry = checkCondition.checkDryness(self.checks, fname2[count])
-                count=1
-            else:
-                self.sendJob(STERILIZING)
-                break
-                
-        teleNotification.sendNotification(self.t, jobs[jobType])
+        if jobType == DRYING:
+            return self.sendJob(DRYING)
+            
+        if jobType == STERILIZING:
+            return self.sendJob(STERILIZING)
+            
+        if jobType == STAIN_CHECK:
+            rpiCamera.captureImage(self.camera, WASHING)
+            isClean = checkCondition.checkCleanliness(self.checks)
+            return isClean
+
+        if jobType == DRY_CHECK:
+            rpiCamera.captureImage(self.camera, DRYING)
+            isDry = checkCondition.checkDryness(self.checks, fname2[0])
+            return isDry
+            
+        if jobType == DRY_CHECK2:
+            rpiCamera.captureImage(self.camera, DRYING)
+            isDry = checkCondition.checkDryness(self.checks, fname2[1])
+            return isDry
+
+        teleNotification.sendNotification(self.t, jobType)
         return True
     
     
@@ -85,6 +89,7 @@ class rpi2Arduino:
                     self.line = ""
                     break
                 print(self.line)
+        return True
                 
                 
     def stopThread(self):

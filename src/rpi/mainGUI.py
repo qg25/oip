@@ -10,7 +10,22 @@ from os import path
 # import yolov5
 from test import *
 from time import sleep
+import threading
+import concurrent.futures
+from rpiToArduino import rpi2Arduino
 
+
+FULL_CYCLE = "FC"
+HALF_CYCLE = "HC"
+STAIN_CHECK = "SC"
+DRY_CHECK = "DC"
+DRY_CHECK2 = "DC2"
+
+WASHING = 1
+DRYING = 2
+STERILIZING = 3
+JOB_SELECTED = ""
+isDry = False
 
 app = Flask(__name__)
 
@@ -19,16 +34,26 @@ class flaskApp:
     def __init__(self):
         @app.route('/')
         def index():
+            global JOB_SELECTED
+            JOB_SELECTED = ""
+            
             return render_template("index.html")
 
 
         @app.route('/wash_syringes')
         def wash_syringes():
+            global JOB_SELECTED
+            JOB_SELECTED = FULL_CYCLE
+            
             return render_template('washSyringe.html')
 
 
         @app.route('/dry_syringes')
         def dry_syringes():
+            global JOB_SELECTED
+            if not JOB_SELECTED:
+                JOB_SELECTED = HALF_CYCLE
+                
             return render_template('drySyringe.html')
 
 
@@ -39,44 +64,63 @@ class flaskApp:
 
         @app.route('/check_stains')
         def check_stains():
-            # Run model to detect for stains and return value gotStains
-            # gotStains 1 or 0
-            gotStains = testFunction1()
-            return jsonify(result=gotStains)
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                future = executor.submit(comms.communications, STAIN_CHECK)
+                return_value = future.result()
+            return jsonify(result=return_value)
 
 
         @app.route('/check_wetness')
         def check_wetness():
-            # Run model to detect for dry or wet and return value isWet
-            # isWet 1 or 0
-            isWet = testFunction2()
-            return jsonify(result=isWet)
+            global isDry
+            if not isDry:
+                with concurrent.futures.ThreadPoolExecutor() as executor:
+                    future = executor.submit(comms.communications, DRY_CHECK)
+                    return_value = future.result()
+                isDry = True
+            else:
+                with concurrent.futures.ThreadPoolExecutor() as executor:
+                    future = executor.submit(comms.communications, DRY_CHECK2)
+                    return_value = future.result()
+                isDry = False
+            return jsonify(result=return_value)
 
 
         @app.route('/wash_syringes_process')
         def wash_syringes_process():
-            for x in range(10):
-                print(x)
-                sleep(1)
-            return jsonify(result=True)
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                future = executor.submit(comms.communications, WASHING)
+                return_value = future.result()
+                
+            return jsonify(result=return_value)
 
 
         @app.route('/dry_syringes_process')
         def dry_syringes_process():
-            for x in range(10):
-                print(x)
-                sleep(1)
-            return jsonify(result=True)
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                future = executor.submit(comms.communications, DRYING)
+                return_value = future.result()
+            return jsonify(result=return_value)
 
 
         @app.route('/sterilise_syringes_process')
         def sterilise_syringes_process():
-            for x in range(10):
-                print(x)
-                sleep(1)
-            return jsonify(result=True)
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                future = executor.submit(comms.communications, STERILIZING)
+                return_value = future.result()
+                
+            if JOB_SELECTED == FULL_CYCLE:
+                comms.communications("Full-Cycle")
+            elif JOB_SELECTED == HALF_CYCLE:
+                comms.communications("Half-Cycle")
+
+            return jsonify(result=return_value)
 
         app.run(host='0.0.0.0')
 
 if __name__ == '__main__':
-    flaskApp()
+    t = threading.Thread(target=flaskApp)
+    t.start()
+
+    comms = rpi2Arduino()
+
