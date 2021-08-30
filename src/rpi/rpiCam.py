@@ -25,4 +25,4 @@ class rpiCamera:
 
 if __name__ == '__main__':
     rpi_cam = rpiCamera()
-    rpiCamera.captureImage(rpi_cam,0)
+    rpiCamera.captureImage(rpi_cam,1)
