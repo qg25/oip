@@ -3,14 +3,14 @@
 
 <head>
     <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport">
 
     <title>ReSyringe</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
     <!-- Resize webpage to any screen-->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Favicons -->
     <link href="static/assets/img/favicon.png" rel="icon">
@@ -44,8 +44,8 @@
 
 <body>
 
-    <!-- ======= Sterilise Section ======= -->
-    <section id="sterilise" class="services">
+    <!-- ======= Sterilize Section ======= -->
+    <section id="sterilize" class="services">
         <div class="container" data-aos="fade-up">
 
             <div class="section-title">
@@ -64,13 +64,13 @@
                             </svg>
                             <i class='bx bxs-washer'></i>
                         </div>
-                        <h4><a id=steriliseText><b>Sterilising in Progress</b></a></h4>
+                        <h4><a id=sterilizeText><b>Sterilising in Progress</b></a></h4>
                         <div id="myProgress">
                             <div id="myBar">10%</div>
                         </div>
                         <br><br>
                         <h2>Results</h2>
-                        <div id="resultSteriliseMsg">
+                        <div id="resultSterilizeMsg">
                             <span id="result"></span>
                         </div>
                     </div>
@@ -126,9 +126,9 @@
     <!-- Template Main JS File -->
     <script src="static/assets/js/main.js"></script>
     <script>
-        function callSteriliseFunc() {
+        function callSterilizeFunc() {
             $.ajax({
-                url: '/sterilise_syringes_process',
+                url: '/sterilize_syringes_process',
                 dataType: 'JSON',
                 type: 'GET',
                 success: function (data) {
@@ -169,9 +169,9 @@
 
 
         function endProcess() {
-            var result = document.getElementById("resultSteriliseMsg");
+            var result = document.getElementById("resultSterilizeMsg");
             result.style.display = "block";
-            document.getElementById("result").innerHTML = "Syringes are fully sterilised. Ending process..";
+            document.getElementById("result").innerHTML = "Syringes are fully sterilized. Ending process..";
             setTimeout(() => { window.location.href = "{{ url_for('index') }}"; }, 2000);
         }
         
@@ -180,7 +180,7 @@
         var width = 10;
         window.onload = function start() {
             progressBar()
-            callSteriliseFunc()
+            callSterilizeFunc()
             console.log('The Script will load now.');
         }
     </script>

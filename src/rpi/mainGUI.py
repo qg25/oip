@@ -46,9 +46,9 @@ class flaskApp:
             return render_template('drySyringe.html')
 
 
-        @app.route('/sterilise_syringes')
-        def sterilise_syringes():
-            return render_template('steriliseSyringe.html')
+        @app.route('/sterilize_syringes')
+        def sterilize_syringes():
+            return render_template('sterilizeSyringe.html')
 
 
         @app.route('/check_stains')
@@ -81,8 +81,8 @@ class flaskApp:
             return jsonify(result=return_value)
 
 
-        @app.route('/sterilise_syringes_process')
-        def sterilise_syringes_process():
+        @app.route('/sterilize_syringes_process')
+        def sterilize_syringes_process():
             return_value = comms.communications(STERILIZING)
                 
             if JOB_SELECTED == FULL_CYCLE:

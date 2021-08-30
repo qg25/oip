@@ -3,14 +3,14 @@
 
 <head>
     <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport">
 
     <title>ReSyringe</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
     <!-- Resize webpage to any screen-->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Favicons -->
     <link href="static/assets/img/favicon.png" rel="icon">
@@ -183,8 +183,8 @@
                 success: function (data) {
                     result.style.display = "block";
                     if (data.result == true) {
-                        document.getElementById("result").innerHTML = "Syringes are fully dried. Moving to sterilise stage..";
-                        setTimeout(() => { window.location.href = "{{ url_for('sterilise_syringes') }}"; }, 2000);
+                        document.getElementById("result").innerHTML = "Syringes are fully dried. Moving to sterilize stage..";
+                        setTimeout(() => { window.location.href = "{{ url_for('sterilize_syringes') }}"; }, 2000);
                     } else {
                         document.getElementById("result").innerHTML = "Syringes are still wet. Restarting drying stage..";
                         setTimeout(() => { window.location.reload(); }, 2000);
