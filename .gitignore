@@ -10,4 +10,4 @@ env.bak/
 venv.bak/
 
 src/rpi/telegrambot/users.txt
-src/rpi/images
+src/rpi/images/
