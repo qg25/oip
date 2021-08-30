@@ -53,9 +53,7 @@ class flaskApp:
 
         @app.route('/check_stains')
         def check_stains():
-            with concurrent.futures.ThreadPoolExecutor() as executor:
-                future = executor.submit(comms.communications, STAIN_CHECK)
-                return_value = future.result()
+            return_value = comms.communications(STAIN_CHECK)
             return jsonify(result=return_value)
 
 
@@ -63,14 +61,10 @@ class flaskApp:
         def check_wetness():
             global isDry
             if not isDry:
-                with concurrent.futures.ThreadPoolExecutor() as executor:
-                    future = executor.submit(comms.communications, DRY_CHECK)
-                    return_value = future.result()
+                return_value = comms.communications(DRY_CHECK)
                 isDry = True
             else:
-                with concurrent.futures.ThreadPoolExecutor() as executor:
-                    future = executor.submit(comms.communications, DRY_CHECK2)
-                    return_value = future.result()
+                return_value = comms.communications(DRY_CHECK2)
                 isDry = False
             return jsonify(result=return_value)
 
