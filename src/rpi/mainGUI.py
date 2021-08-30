@@ -1,18 +1,7 @@
 
-from flask import Flask, render_template, flash, redirect, url_for, session, request, logging, abort, jsonify, make_response
-# import json
-# import requests
-# import ast
-# import cv2
-from os import path
-# import numpy as np
-# import base64
-# import yolov5
-from test import *
-from time import sleep
-import threading
-import concurrent.futures
 from rpiToArduino import rpi2Arduino
+from flask import Flask, render_template, jsonify
+import threading
 
 
 FULL_CYCLE = "FC"
@@ -88,26 +77,19 @@ class flaskApp:
 
         @app.route('/wash_syringes_process')
         def wash_syringes_process():
-            with concurrent.futures.ThreadPoolExecutor() as executor:
-                future = executor.submit(comms.communications, WASHING)
-                return_value = future.result()
-                
+            return_value = comms.communications(WASHING)
             return jsonify(result=return_value)
 
 
         @app.route('/dry_syringes_process')
         def dry_syringes_process():
-            with concurrent.futures.ThreadPoolExecutor() as executor:
-                future = executor.submit(comms.communications, DRYING)
-                return_value = future.result()
+            return_value = comms.communications(DRYING)
             return jsonify(result=return_value)
 
 
         @app.route('/sterilise_syringes_process')
         def sterilise_syringes_process():
-            with concurrent.futures.ThreadPoolExecutor() as executor:
-                future = executor.submit(comms.communications, STERILIZING)
-                return_value = future.result()
+            return_value = comms.communications(STERILIZING)
                 
             if JOB_SELECTED == FULL_CYCLE:
                 comms.communications("Full-Cycle")
