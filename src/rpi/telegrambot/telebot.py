@@ -35,7 +35,7 @@ class teleNotification:
 
             print('Message received from ' + str(chat_id))
 
-            if command == '/join':
+            if command == '/start':
                 returnMsg = self.addUser(chat_id)
                 bot.sendMessage(chat_id, returnMsg % name)
 
@@ -74,7 +74,7 @@ class teleNotification:
                     isExist = True
                     break
             if not isExist:
-                f.write(str(chatID))
+                f.write(str(chatID) + "\n")
 
             f.close()
         return joined_msg if isExist else welcome_msg
