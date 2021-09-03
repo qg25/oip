@@ -11,3 +11,8 @@
 
 # Note!!!
 Unable to fun full features on non-Raspberry Pi devices due to Pi-Camera modules etc.
+
+![](https://github.com/qg25/WeirdStuff/blob/master/gif/OIP/OIP-MainMenu.gif)
+![](https://github.com/qg25/WeirdStuff/blob/master/gif/OIP/OIP-FullCycle.gif)
+![](https://github.com/qg25/WeirdStuff/blob/master/gif/OIP/OIP-DryingStage.gif)
+![](https://github.com/qg25/WeirdStuff/blob/master/gif/OIP/OIP-SterilizeStage.gif)
