@@ -16,8 +16,8 @@ class checkCondition:
             return False
         return True
 
-    def checkDryness(self, fname):
-        result = dryDetection(fname)
+    def checkDryness(self):
+        result = dryDetection()
         print("results: ", result)
         if result == DRY:
             return True

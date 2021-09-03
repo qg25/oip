@@ -19,9 +19,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import argparse
-import io
-import time
 import numpy as np
 import picamera
 import os
@@ -72,7 +69,7 @@ def classify_image(interpreter, image, top_k=1):
   return [(i, output[i]) for i in ordered[:top_k]]
 
 
-def dryDetection(imageName):
+def dryDetection(imageName="dryImg.jpg"):
   global results
   
   labels = load_labels(labelPath)
